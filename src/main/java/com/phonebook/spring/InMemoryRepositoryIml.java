@@ -68,8 +68,12 @@ public class InMemoryRepositoryIml implements InMemoryRepository {
 
     @Override
     public void addPhone(String name, String phone) {
-        final Set<String> phone_set = new HashSet<>(asList(phone));
-        data.put(name, phone_set);
+        if (data.containsKey(name)) {
+            data.get(name).add(phone);
+        } else {
+            Set<String> phone_set = new HashSet<>(asList(phone));
+            data.put(name, phone_set);
+        }
     }
 
     @Override

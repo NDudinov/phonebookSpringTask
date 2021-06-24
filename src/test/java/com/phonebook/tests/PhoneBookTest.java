@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -80,7 +81,12 @@ public class PhoneBookTest {
     public void remove_nonexistent_phone() {
         final String phone = "+111111111";
         phoneBook.removePhone(phone);
-        assertTrue("Record wasn't deleted", true);
+        //need to think how to check stack trace of this exception
+
+        assertTrue("Something was found and deleted", phoneBook.findAllPhonesByName("Alex").size()==1);
+        assertTrue("Something was found and deleted", phoneBook.findAllPhonesByName("Billy").size()==3);
+//        assertTrue("Something was found and deleted", Arrays.stream(Thread.currentThread().getStackTrace())
+//                .anyMatch(ste -> ste.equals("[ERROR]: !SOMETHING WENT WRONG!   :   java.lang.IllegalArgumentException")));
     }
 
 }
