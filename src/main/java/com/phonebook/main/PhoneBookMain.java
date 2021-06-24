@@ -3,6 +3,7 @@ package com.phonebook.main;
 import com.phonebook.spring.ApplicationConfig;
 import com.phonebook.spring.PhoneBook;
 import com.phonebook.spring.PhoneBookFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -23,6 +24,7 @@ public class PhoneBookMain {
         PhoneBook phoneBook = context.getBean("phoneBook", PhoneBook.class);
         PhoneBookFormatter renderer = (PhoneBookFormatter) context.getBean("phoneBookFormatter");
 
+        renderer.info("type 'ADD' 'name' 'phone' to add a phone to an existing or new user");
         renderer.info("type 'exit' to quit.");
         while (sc.hasNext()) {
             String line = sc.nextLine();
@@ -31,6 +33,7 @@ public class PhoneBookMain {
                 break;
             }
             try {
+
                 // TODO: add your code here
                 throw new UnsupportedOperationException("Implement it!");
             } catch (Exception e) {

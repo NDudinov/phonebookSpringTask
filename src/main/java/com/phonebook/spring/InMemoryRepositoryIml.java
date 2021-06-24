@@ -1,11 +1,13 @@
 package com.phonebook.spring;
 
 import com.phonebook.main.InMemoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static java.util.Arrays.asList;
 
 /**
  * Keeps phoneBook data in memory in ordered in accordance to addition.
@@ -14,6 +16,11 @@ import java.util.Set;
 public class InMemoryRepositoryIml implements InMemoryRepository {
 
     private Map<String, Set<String>> data;
+
+    private final static String NO_NAME = "No name with this phone";
+
+    @Autowired
+    PhoneBookFormatter formatter;
 
     /**
      * no args constructor
@@ -39,21 +46,43 @@ public class InMemoryRepositoryIml implements InMemoryRepository {
 
     @Override
     public Set<String> findAllPhonesByName(String name) {
-        throw new UnsupportedOperationException("Implement it!");
+        Set<String> result = new HashSet<>();
+        data.forEach((key, value) -> {
+            if (key.contains(name)) {
+                result.addAll(value);
+            }
+        });
+        return result;
     }
 
     @Override
     public String findNameByPhone(String phone) {
-        throw new UnsupportedOperationException("Implement it!");
+        String result = NO_NAME;
+        for (Map.Entry<String, Set<String>> entry : data.entrySet()) {
+            if (entry.getValue().contains(phone)) {
+                result = entry.getKey();
+            }
+        }
+        return result;
     }
 
     @Override
     public void addPhone(String name, String phone) {
-        throw new UnsupportedOperationException("Implement it!");
+        final Set<String> phone_set = new HashSet<>(asList(phone));
+        data.put(name, phone_set);
     }
 
     @Override
     public void removePhone(String phone) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Implement it!");
+        String key = findNameByPhone(phone);
+        if (key.equals(NO_NAME)) {
+            formatter.error(NO_NAME);
+            formatter.error(new IllegalArgumentException());
+        } else{
+            if (findAll().get(key).size() > 1) {
+                data.get(key).remove(phone);
+            } else data.remove(key);
+        }
+
     }
 }
